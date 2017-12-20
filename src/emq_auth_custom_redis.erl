@@ -45,34 +45,34 @@ load(Env) ->
     emqttd:hook('message.acked', fun ?MODULE:on_message_acked/4, [Env]).
 
 on_client_connected(ConnAck, Client = #mqtt_client{client_id = ClientId}, _Env) ->
-    io:format("client ~s connected, connack: ~w~n", [ClientId, ConnAck]),
+    io:format("client2 ~s connected, connack: ~w~n", [ClientId, ConnAck]),
     {ok, Client}.
 
 on_client_disconnected(Reason, _Client = #mqtt_client{client_id = ClientId}, _Env) ->
-    io:format("client ~s disconnected, reason: ~w~n", [ClientId, Reason]),
+    io:format("client2 ~s disconnected, reason: ~w~n", [ClientId, Reason]),
     ok.
 
 on_client_subscribe(ClientId, Username, TopicTable, _Env) ->
-    io:format("client(~s/~s) will subscribe: ~p~n", [Username, ClientId, TopicTable]),
+    io:format("client2(~s/~s) will subscribe: ~p~n", [Username, ClientId, TopicTable]),
     {ok, TopicTable}.
     
 on_client_unsubscribe(ClientId, Username, TopicTable, _Env) ->
-    io:format("client(~s/~s) unsubscribe ~p~n", [ClientId, Username, TopicTable]),
+    io:format("client2(~s/~s) unsubscribe ~p~n", [ClientId, Username, TopicTable]),
     {ok, TopicTable}.
 
 on_session_created(ClientId, Username, _Env) ->
-    io:format("session(~s/~s) created.", [ClientId, Username]).
+    io:format("session2(~s/~s) created.", [ClientId, Username]).
 
 on_session_subscribed(ClientId, Username, {Topic, Opts}, _Env) ->
-    io:format("session(~s/~s) subscribed: ~p~n", [Username, ClientId, {Topic, Opts}]),
+    io:format("session2(~s/~s) subscribed: ~p~n", [Username, ClientId, {Topic, Opts}]),
     {ok, {Topic, Opts}}.
 
 on_session_unsubscribed(ClientId, Username, {Topic, Opts}, _Env) ->
-    io:format("session(~s/~s) unsubscribed: ~p~n", [Username, ClientId, {Topic, Opts}]),
+    io:format("session2(~s/~s) unsubscribed: ~p~n", [Username, ClientId, {Topic, Opts}]),
     ok.
 
 on_session_terminated(ClientId, Username, Reason, _Env) ->
-    io:format("session(~s/~s) terminated: ~p.", [ClientId, Username, Reason]).
+    io:format("session2(~s/~s) terminated: ~p.", [ClientId, Username, Reason]).
 
 %% transform message and return
 on_message_publish(Message = #mqtt_message{topic = <<"$SYS/", _/binary>>}, _Env) ->
