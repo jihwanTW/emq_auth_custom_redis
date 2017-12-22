@@ -14,7 +14,7 @@
 %% limitations under the License.
 %%--------------------------------------------------------------------
 
--module(emq_auth_custom_redis_acl).
+-module(emq_acl).
 
 -include_lib("emqttd/include/emqttd.hrl").
 
