@@ -23,12 +23,12 @@
 
 start(_StartType, _StartArgs) ->
     {ok, Sup} = emq_auth_custom_redis_sup:start_link(),
-    ok = emqttd_access_control:register_mod(auth, emq_auth_demo, []),
-    ok = emqttd_access_control:register_mod(acl, emq_acl_demo, []),
+    ok = emqttd_access_control:register_mod(auth, emq_auth, []),
+    ok = emqttd_access_control:register_mod(acl, emq_acl, []),
     emq_auth_custom_redis:load(application:get_all_env()),
     {ok, Sup}.
 
 stop(_State) ->
-    ok = emqttd_access_control:unregister_mod(auth, emq_auth_demo),
-    ok = emqttd_access_control:unregister_mod(acl, emq_acl_demo),
+    ok = emqttd_access_control:unregister_mod(auth, emq_auth),
+    ok = emqttd_access_control:unregister_mod(acl, emq_acl),
     emq_auth_custom_redis:unload().
