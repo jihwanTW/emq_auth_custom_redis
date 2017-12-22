@@ -44,7 +44,8 @@ check(#mqtt_client{client_id = ClientId, username = Username}, Password, _Opts) 
 %%      error
 %%  end,
 %%  io:format("result is ~p ~n",[Result]),
-  Result.
+%%  Result
+ok.
 
 description() -> "Auth Demo Module".
 
