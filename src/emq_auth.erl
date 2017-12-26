@@ -37,15 +37,15 @@ check(#mqtt_client{client_id = ClientId, username = Username}, Password, _Opts) 
         ok->
           ok;
         _->
-          error
+          io:format("redis result : [~p]~n",[Redis_result]),
+          ok
       end
       ;
     _->
       error
   end,
   io:format("result is ~p ~n",[Result]),
-  Result,
-  ok.
+  Result.
 
 description() -> "Auth Demo Module".
 
