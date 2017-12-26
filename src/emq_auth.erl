@@ -27,24 +27,31 @@ init(Opts) -> {ok, Opts}.
 check(#mqtt_client{client_id = ClientId, username = Username}, Password, _Opts) ->
     io:format("Auth Demo 2 : clientId=~p, username=~p, password=~p~n",
               [ClientId, Username, Password]),
-  {Success_result,Pid} = eredis:start_link(),
-  Result = case Success_result of
-    ok->
-      {ok,Redis_result} = eredis:q(Pid,["GET",ClientId]),
-      case Redis_result of
-        undefined->
-          error;
-        ok->
-          ok;
-        _->
-          io:format("redis result : [~p]~n",[Redis_result]),
-          ok
-      end
-      ;
+  Result = case ClientId of
+    server->
+      ok;
     _->
-      error
+      {Success_result,Pid} = eredis:start_link(),
+      Result1 = case Success_result of
+                 ok->
+                   {ok,Redis_result} = eredis:q(Pid,["GET",ClientId]),
+                   case Redis_result of
+                     undefined->
+                       error;
+                     ok->
+                       ok;
+                     _->
+                       io:format("redis result : [~p]~n",[Redis_result]),
+                       ok
+                   end
+                 ;
+                 _->
+                   error
+               end,
+      exit(Pid,normal),
+      Result1
   end,
-  io:format("result is ~p ~n",[Result]),
+  io:format("clientId[~p] result[~p] ~n",[ClientId,Result]),
   Result.
 
 description() -> "Auth Demo Module".
