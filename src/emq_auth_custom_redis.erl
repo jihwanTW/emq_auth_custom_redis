@@ -72,22 +72,27 @@ on_client_disconnected(Reason, _Client = #mqtt_client{client_id = ClientId}, _En
     io:format("client2 ~s disconnected, reason: ~w~n", [ClientId, Reason]),
     ok.
 
+%% return 으로 ok 만 넘어가도 정상적으로 작동은함. 대신 Qos 어떻게 넘어가는지 모름.
+%% dafd 반환 -> 무엇으로 넘어가든지 상관없이 정상작동
 on_client_subscribe(ClientId, Username, TopicTable, _Env) ->
     io:format("client2(~s/~s) will subscribe: ~p~n", [Username, ClientId, TopicTable]),
-    {ok, TopicTable}.
-    
+    {ok, TopicTable}
+.
+
 on_client_unsubscribe(ClientId, Username, TopicTable, _Env) ->
     io:format("client2(~s/~s) unsubscribe ~p~n", [ClientId, Username, TopicTable]),
-    %{ok, TopicTable}
-ok
+    {ok, TopicTable}
 .
+
 
 on_session_created(ClientId, Username, _Env) ->
     io:format("session2(~s/~s) created.", [ClientId, Username]).
 
+%% return 으로 무엇이 넘어가든 상관없이 정상작동
 on_session_subscribed(ClientId, Username, {Topic, Opts}, _Env) ->
     io:format("session2(~s/~s) subscribed: ~p~n", [Username, ClientId, {Topic, Opts}]),
-    {ok, {Topic, Opts}}.
+    {ok, {Topic, Opts}}
+.
 
 on_session_unsubscribed(ClientId, Username, {Topic, Opts}, _Env) ->
     io:format("session2(~s/~s) unsubscribed: ~p~n", [Username, ClientId, {Topic, Opts}]),
