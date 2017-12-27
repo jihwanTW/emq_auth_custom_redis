@@ -46,7 +46,7 @@ load(Env) ->
 
 on_client_connected(ConnAck, Client = #mqtt_client{client_id = ClientId}, _Env) ->
     io:format("client2 ~s connected, connack: ~w~n", [ClientId, ConnAck]),
-%%    emqttd:subscribe(<<"tempBoard">>,ClientId),
+    emqttd_client:subscribe(self(),{<<"tempBoard">>,[{qos,0}]}),
 %%    {Success_result,Pid} = eredis:start_link(),
 %%    Result1 = case Success_result of
 %%                  ok->
