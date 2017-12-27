@@ -78,7 +78,9 @@ on_client_subscribe(ClientId, Username, TopicTable, _Env) ->
     
 on_client_unsubscribe(ClientId, Username, TopicTable, _Env) ->
     io:format("client2(~s/~s) unsubscribe ~p~n", [ClientId, Username, TopicTable]),
-    {ok, TopicTable}.
+    %{ok, TopicTable}
+ok
+.
 
 on_session_created(ClientId, Username, _Env) ->
     io:format("session2(~s/~s) created.", [ClientId, Username]).
