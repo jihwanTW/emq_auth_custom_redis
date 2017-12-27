@@ -24,12 +24,39 @@
 init(Opts) ->
     {ok, Opts}.
 
+%% client 쪽에서 publish 못하게끔 . subscribe 는 언제나 client 쪽에서만 가능하도록 ?
+%%
+%% allow // deny
 check_acl({Client, PubSub, Topic}, _Opts) ->
     Client_id = Client#mqtt_client.client_id,
     Username = Client#mqtt_client.username,
-    io:format("ACL Demo 2 : ~p ~n~p ~n~p~n", [Client, PubSub, Topic]),
+    io:format("ACL Demo 2 : >~p ~n>~p ~n>~p~n", [Client, PubSub, Topic]),
     io:format("~p ~p ~n", [Client_id, Username]),
-    allow.
+    Result = case Client_id of
+                 <<"server">>->
+                     allow;
+                 _->
+                     {Success_result,Pid} = eredis:start_link(),
+                     Result1 = case Success_result of
+                                   ok->
+                                       {ok,Redis_result} = eredis:q(Pid,["GET", Client_id]),
+                                       case Redis_result of
+                                           undefined->
+                                               deny;%{error,<<"session key is not undefined">>};
+                                           ok->
+                                               allow;
+                                           _->
+                                               io:format("redis result : [~p]~n",[Redis_result]),
+                                               allow
+                                       end
+                                   ;
+                                   _->
+                                       deny%{error,<<"eredis start link error">>}
+                               end,
+                     exit(Pid,normal),
+                     Result1
+             end,
+    Result.
 
 reload_acl(_Opts) ->
     ok.

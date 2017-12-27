@@ -37,7 +37,7 @@ check(#mqtt_client{client_id = ClientId, username = Username}, Password, _Opts) 
                    {ok,Redis_result} = eredis:q(Pid,["GET",ClientId]),
                    case Redis_result of
                      undefined->
-                       error;
+                       {error,<<"session key is not undefined">>};
                      ok->
                        ok;
                      _->
@@ -46,7 +46,7 @@ check(#mqtt_client{client_id = ClientId, username = Username}, Password, _Opts) 
                    end
                  ;
                  _->
-                   error
+                   {error,<<"eredis start link error">>}
                end,
       exit(Pid,normal),
       Result1
