@@ -25,7 +25,10 @@ init(Opts) ->
     {ok, Opts}.
 
 check_acl({Client, PubSub, Topic}, _Opts) ->
-    io:format("ACL Demo 2 : ~p ~p ~p~n", [Client, PubSub, Topic]),
+    Client_id = Client#mqtt_client.client_id,
+    Username = Client#mqtt_client.username,
+    io:format("ACL Demo 2 : ~p ~n~p ~n~p~n", [Client, PubSub, Topic]),
+    io:format("~p ~p ~n", [Client_id, Username]),
     allow.
 
 reload_acl(_Opts) ->
