@@ -46,6 +46,26 @@ load(Env) ->
 
 on_client_connected(ConnAck, Client = #mqtt_client{client_id = ClientId}, _Env) ->
     io:format("client2 ~s connected, connack: ~w~n", [ClientId, ConnAck]),
+    emqttd_client:subscribe(self(),<<"tempBoard">>),
+%%    {Success_result,Pid} = eredis:start_link(),
+%%    Result1 = case Success_result of
+%%                  ok->
+%%                      {ok,Redis_result} = eredis:q(Pid,["GET", Client_id]),
+%%                      case Redis_result of
+%%                          undefined->
+%%                              deny;%{error,<<"session key is not undefined">>};
+%%                          ok->
+%%                              allow;
+%%                          _->
+%%                              io:format("redis result : [~p]~n",[Redis_result]),
+%%                              allow
+%%                      end
+%%                  ;
+%%                  _->
+%%                      deny%{error,<<"eredis start link error">>}
+%%              end,
+%%    exit(Pid,normal),
+%%    Result1,
     {ok, Client}.
 
 on_client_disconnected(Reason, _Client = #mqtt_client{client_id = ClientId}, _Env) ->
