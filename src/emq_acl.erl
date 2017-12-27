@@ -30,8 +30,6 @@ init(Opts) ->
 check_acl({Client, PubSub, Topic}, _Opts) ->
     Client_id = Client#mqtt_client.client_id,
     Username = Client#mqtt_client.username,
-    io:format("ACL Demo 2 : >~p ~n>~p ~n>~p~n", [Client, PubSub, Topic]),
-    io:format("~p ~p ~n", [Client_id, Username]),
     Result = case Client_id of
                  <<"server">>->
                      allow;
@@ -56,6 +54,7 @@ check_acl({Client, PubSub, Topic}, _Opts) ->
                      exit(Pid,normal),
                      Result1
              end,
+    io:format("ACL [~p] [~p] [Result:~p]~n", [Client_id, Username,Result]),
     Result.
 
 reload_acl(_Opts) ->

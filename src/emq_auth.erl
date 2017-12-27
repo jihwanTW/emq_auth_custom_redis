@@ -25,8 +25,8 @@
 init(Opts) -> {ok, Opts}.
 
 check(#mqtt_client{client_id = ClientId, username = Username}, Password, _Opts) ->
-    io:format("Auth Demo 2 : clientId=~p, username=~p, password=~p~n",
-              [ClientId, Username, Password]),
+%%    io:format("Auth Demo 2 : clientId=~p, username=~p, password=~p~n",
+%%              [ClientId, Username, Password]),
   Result = case ClientId of
     <<"server">>->
       ok;
@@ -43,15 +43,14 @@ check(#mqtt_client{client_id = ClientId, username = Username}, Password, _Opts) 
                      _->
                        io:format("redis result : [~p]~n",[Redis_result]),
                        ok
-                   end
-                 ;
+                   end;
                  _->
                    {error,<<"eredis start link error">>}
                end,
       exit(Pid,normal),
       Result1
   end,
-  io:format("clientId[~p] result[~p] ~n",[ClientId,Result]),
+  io:format("Auth clientId[~p] result[~p] ~n",[ClientId,Result]),
   Result.
 
 description() -> "Auth Demo Module".
