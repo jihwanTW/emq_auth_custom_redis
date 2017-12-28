@@ -75,8 +75,15 @@ on_client_disconnected(Reason, _Client = #mqtt_client{client_id = ClientId}, _En
 %% return 으로 ok 만 넘어가도 정상적으로 작동은함. 대신 Qos 어떻게 넘어가는지 모름.
 %% dafd 반환 -> 무엇으로 넘어가든지 상관없이 정상작동
 on_client_subscribe(ClientId, Username, TopicTable, _Env) ->
-    io:format("client2(~s/~s) will subscribe: ~p~n", [Username, ClientId, TopicTable]),
-    {ok, TopicTable}
+    [{Topic1,Qos1}|_] = TopicTable,
+    TopicTable1 = case Topic1 of
+                      <<"pre">>->
+                          [{<<"tempBoard">>,[{qos,0}]}];
+                      _->
+                          TopicTable
+    end,
+    io:format("client2(~s/~s) will subscribe: ~p chagneSub : ~p~n", [Username, ClientId, TopicTable,TopicTable1]),
+    {ok, TopicTable1}
 .
 
 on_client_unsubscribe(ClientId, Username, TopicTable, _Env) ->
