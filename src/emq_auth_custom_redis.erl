@@ -44,7 +44,7 @@ load(Env) ->
     emqttd:hook('message.delivered', fun ?MODULE:on_message_delivered/4, [Env]),
     emqttd:hook('message.acked', fun ?MODULE:on_message_acked/4, [Env]).
 
-on_client_connected(ConnAck, Client = #mqtt_client{client_id = ClientId}, _Env) ->
+on_client_connected(ConnAck, Client = #mqtt_client{client_id = ClientId,username = Username}, _Env) ->
     io:format("client2 ~s connected, connack: ~w~n", [ClientId, ConnAck]),
     %%emqttd_client:subscribe(self(),{<<"tempBoard">>,[{qos,0}]}),
 %%    {Success_result,Pid} = eredis:start_link(),
@@ -66,6 +66,15 @@ on_client_connected(ConnAck, Client = #mqtt_client{client_id = ClientId}, _Env) 
 %%              end,
 %%    exit(Pid,normal),
 %%    Result1,
+
+    % subscribe
+    case ClientId of
+        <<"MQTT_TEMP">>->
+            TopicTable = [{<<"tempBoard">>,[{qos,0}]}],
+            on_client_subscribe(ClientId,Username, TopicTable,'_');
+        _->
+            pass
+    end,
     {ok, Client}.
 
 on_client_disconnected(Reason, _Client = #mqtt_client{client_id = ClientId}, _Env) ->
@@ -138,3 +147,10 @@ unload() ->
     emqttd:unhook('message.delivered', fun ?MODULE:on_message_delivered/4),
     emqttd:unhook('message.acked', fun ?MODULE:on_message_acked/4).
 
+
+
+generate_topic_table(ClientId)->
+    Qos = [{qos,0}],
+
+    pass
+.
