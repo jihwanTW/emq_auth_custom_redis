@@ -155,25 +155,25 @@ unload() ->
 
 
 
-generate_topic_table(ClientId)->
-    Qos = [{qos,0}],
-    {ok,Pid} = eredis:start_link(),
-    eredis:q(Pid,["SELECT",2]),
-    -
-    pass
-.
-
-
-subscribe(ClientId)->
-    Topic = undefined,
-    emqttd_pubsub:subscribe(),
-    Client = emqttd_cm:lookup(ClientId),
-    case Client of
-        undefined->ok;
-        Client->
-            emqttd_client:subscribe(Client#mqtt_client.client_pid,)
-    end,
-    TopicTable = [{<<"tempBoard">>,[{qos,0}]}],
-    on_client_subscribe(ClientId,Username, TopicTable,'_')
-
-    .
+%%generate_topic_table(ClientId)->
+%%    Qos = [{qos,0}],
+%%    {ok,Pid} = eredis:start_link(),
+%%    eredis:q(Pid,["SELECT",2]),
+%%    -
+%%    pass
+%%.
+%%
+%%
+%%subscribe(ClientId)->
+%%    Topic = undefined,
+%%    emqttd_pubsub:subscribe(),
+%%    Client = emqttd_cm:lookup(ClientId),
+%%    case Client of
+%%        undefined->ok;
+%%        Client->
+%%            emqttd_client:subscribe(Client#mqtt_client.client_pid,)
+%%    end,
+%%    TopicTable = [{<<"tempBoard">>,[{qos,0}]}],
+%%    on_client_subscribe(ClientId,Username, TopicTable,'_')
+%%
+%%    .
