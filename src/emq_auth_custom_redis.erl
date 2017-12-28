@@ -45,7 +45,7 @@ load(Env) ->
     emqttd:hook('message.acked', fun ?MODULE:on_message_acked/4, [Env]).
 
 on_client_connected(ConnAck, Client = #mqtt_client{client_id = ClientId,username = Username}, _Env) ->
-    io:format("client2 ~s connected, connack: ~w~n", [ClientId, ConnAck]),
+    io:format("client2 ~s connected, connack: ~w // pid : ~p~n", [ClientId, ConnAck,pid_to_list(self())]),
     %%emqttd_client:subscribe(self(),{<<"tempBoard">>,[{qos,0}]}),
 %%    {Success_result,Pid} = eredis:start_link(),
 %%    Result1 = case Success_result of
@@ -68,13 +68,12 @@ on_client_connected(ConnAck, Client = #mqtt_client{client_id = ClientId,username
 %%    Result1,
 
     % subscribe
-    case ClientId of
-        <<"MQTT_TEMP">>->
-            TopicTable = [{<<"tempBoard">>,[{qos,0}]}],
-            on_client_subscribe(ClientId,Username, TopicTable,'_');
-        _->
-            pass
-    end,
+%%    case ClientId of
+%%        <<"MQTT_TEMP">>->
+%%            subscribe(ClientId);
+%%        _->
+%%            pass
+%%    end,
     {ok, Client}.
 
 on_client_disconnected(Reason, _Client = #mqtt_client{client_id = ClientId}, _Env) ->
@@ -96,8 +95,15 @@ on_client_subscribe(ClientId, Username, TopicTable, _Env) ->
 .
 
 on_client_unsubscribe(ClientId, Username, TopicTable, _Env) ->
-    io:format("client2(~s/~s) unsubscribe ~p~n", [ClientId, Username, TopicTable]),
-    {ok, TopicTable}
+    [{Topic1,Qos1}|_] = TopicTable,
+    TopicTable1 = case Topic1 of
+                      <<"pre">>->
+                          [{<<"tempBoard">>,[{qos,0}]}];
+                      _->
+                          TopicTable
+                  end,
+    io:format("client2(~s/~s) unsubscribe ~p chagneSub : ~p~n", [ClientId, Username, TopicTable,TopicTable1]),
+    {ok, TopicTable1}
 .
 
 
@@ -151,6 +157,23 @@ unload() ->
 
 generate_topic_table(ClientId)->
     Qos = [{qos,0}],
-
+    {ok,Pid} = eredis:start_link(),
+    eredis:q(Pid,["SELECT",2]),
+    -
     pass
 .
+
+
+subscribe(ClientId)->
+    Topic = undefined,
+    emqttd_pubsub:subscribe(),
+    Client = emqttd_cm:lookup(ClientId),
+    case Client of
+        undefined->ok;
+        Client->
+            emqttd_client:subscribe(Client#mqtt_client.client_pid,)
+    end,
+    TopicTable = [{<<"tempBoard">>,[{qos,0}]}],
+    on_client_subscribe(ClientId,Username, TopicTable,'_')
+
+    .
