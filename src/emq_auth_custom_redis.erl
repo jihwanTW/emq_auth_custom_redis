@@ -50,7 +50,7 @@ on_client_connected(ConnAck, Client = #mqtt_client{client_id = ClientId,username
         <<"MQTT_TEMP">>->
             Client = emqttd_cm:lookup(ClientId),
 
-            emqttd_client:subscribe(Client#mqtt_client.client_pid);
+            emqttd_client:subscribe(Client#mqtt_client.client_pid,[{<<"tempBoard">>,[{qos,0}]}]);
             %emqttd_session:subscribe(Client#mqtt_client.client_pid,[{<<"tempBoard">>,[{qos,0}]}]);
         _->
             undefined
