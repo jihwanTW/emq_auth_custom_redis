@@ -46,6 +46,11 @@ load(Env) ->
 
 on_client_connected(ConnAck, Client = #mqtt_client{client_id = ClientId,username = Username}, _Env) ->
     io:format("client2 ~s connected, connack: ~w // pid : ~p~n", [ClientId, ConnAck,pid_to_list(self())]),
+    case ClientId of
+        <<"MQTT_TEMP">>->
+            Client = emqttd_cm:lookup(ClientId),
+            emqttd_session:subscribe(Client#mqtt_client.client_pid,[{<<"tempBoard">>,[{qos,0}]}])
+    end,
     %%emqttd_client:subscribe(self(),{<<"tempBoard">>,[{qos,0}]}),
 %%    {Success_result,Pid} = eredis:start_link(),
 %%    Result1 = case Success_result of
@@ -90,7 +95,7 @@ on_client_subscribe(ClientId, Username, TopicTable, _Env) ->
                       _->
                           TopicTable
     end,
-    io:format("client2(~s/~s) will subscribe: ~p chagneSub : ~p /// pid : ~p~n", [Username, ClientId, TopicTable,TopicTable1,pid_to_list(self())]),
+    io:format("client2(~s/~s) will subscribe: ~p chagneSub : ~p~n", [Username, ClientId, TopicTable,TopicTable1]),
     {ok, TopicTable1}
 .
 
@@ -112,7 +117,7 @@ on_session_created(ClientId, Username, _Env) ->
 
 %% return 으로 무엇이 넘어가든 상관없이 정상작동
 on_session_subscribed(ClientId, Username, {Topic, Opts}, _Env) ->
-    io:format("session2(~s/~s) subscribed: ~p // pid : ~p~n", [Username, ClientId, {Topic, Opts},pid_to_list(self())]),
+    io:format("session2(~s/~s) subscribed: ~p~n", [Username, ClientId, {Topic, Opts}]),
     {ok, {Topic, Opts}}
 .
 
