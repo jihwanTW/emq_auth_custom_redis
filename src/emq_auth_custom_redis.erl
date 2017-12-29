@@ -48,7 +48,7 @@ on_client_connected(ConnAck, Client = #mqtt_client{client_id = ClientId,username
     io:format("client2 ~s connected, connack: ~w // pid : ~p~n", [ClientId, ConnAck,pid_to_list(self())]),
     case ClientId of
         <<"MQTT_TEMP">>->
-            emqttd_client:subscribe(Client#mqtt_client.client_pid,[{<<"tempBoard">>,0]);
+            emqttd_client:subscribe(Client#mqtt_client.client_pid,[{<<"tempBoard">>,0}]);
         _->
             undefined
     end,
