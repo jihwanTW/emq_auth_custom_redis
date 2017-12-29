@@ -48,41 +48,10 @@ on_client_connected(ConnAck, Client = #mqtt_client{client_id = ClientId,username
     io:format("client2 ~s connected, connack: ~w // pid : ~p~n", [ClientId, ConnAck,pid_to_list(self())]),
     case ClientId of
         <<"MQTT_TEMP">>->
-            Client = emqttd_cm:lookup(ClientId),
-
             emqttd_client:subscribe(Client#mqtt_client.client_pid,[{<<"tempBoard">>,0);
-            %emqttd_session:subscribe(Client#mqtt_client.client_pid,[{<<"tempBoard">>,[{qos,0}]}]);
         _->
             undefined
     end,
-    %%emqttd_client:subscribe(self(),{<<"tempBoard">>,[{qos,0}]}),
-%%    {Success_result,Pid} = eredis:start_link(),
-%%    Result1 = case Success_result of
-%%                  ok->
-%%                      {ok,Redis_result} = eredis:q(Pid,["GET", Client_id]),
-%%                      case Redis_result of
-%%                          undefined->
-%%                              deny;%{error,<<"session key is not undefined">>};
-%%                          ok->
-%%                              allow;
-%%                          _->
-%%                              io:format("redis result : [~p]~n",[Redis_result]),
-%%                              allow
-%%                      end
-%%                  ;
-%%                  _->
-%%                      deny%{error,<<"eredis start link error">>}
-%%              end,
-%%    exit(Pid,normal),
-%%    Result1,
-
-    % subscribe
-%%    case ClientId of
-%%        <<"MQTT_TEMP">>->
-%%            subscribe(ClientId);
-%%        _->
-%%            pass
-%%    end,
     {ok, Client}.
 
 on_client_disconnected(Reason, _Client = #mqtt_client{client_id = ClientId}, _Env) ->
@@ -92,27 +61,13 @@ on_client_disconnected(Reason, _Client = #mqtt_client{client_id = ClientId}, _En
 %% return 으로 ok 만 넘어가도 정상적으로 작동은함. 대신 Qos 어떻게 넘어가는지 모름.
 %% dafd 반환 -> 무엇으로 넘어가든지 상관없이 정상작동
 on_client_subscribe(ClientId, Username, TopicTable, _Env) ->
-    [{Topic1,Qos1}|_] = TopicTable,
-    TopicTable1 = case Topic1 of
-                      <<"pre">>->
-                          [{<<"tempBoard">>,[{qos,0}]}];
-                      _->
-                          TopicTable
-    end,
-    io:format("client2(~s/~s) will subscribe: ~p chagneSub : ~p~n", [Username, ClientId, TopicTable,TopicTable1]),
-    {ok, TopicTable1}
+    io:format("client2(~s/~s) will subscribe: ~p~n", [Username, ClientId, TopicTable]),
+    {ok, TopicTable}
 .
 
 on_client_unsubscribe(ClientId, Username, TopicTable, _Env) ->
-    [{Topic1,Qos1}|_] = TopicTable,
-    TopicTable1 = case Topic1 of
-                      <<"pre">>->
-                          [{<<"tempBoard">>,[{qos,0}]}];
-                      _->
-                          TopicTable
-                  end,
-    io:format("client2(~s/~s) unsubscribe ~p chagneSub : ~p~n", [ClientId, Username, TopicTable,TopicTable1]),
-    {ok, TopicTable1}
+    io:format("client2(~s/~s) unsubscribe ~p~n", [ClientId, Username, TopicTable]),
+    {ok, TopicTable}
 .
 
 
@@ -162,27 +117,3 @@ unload() ->
     emqttd:unhook('message.delivered', fun ?MODULE:on_message_delivered/4),
     emqttd:unhook('message.acked', fun ?MODULE:on_message_acked/4).
 
-
-
-%%generate_topic_table(ClientId)->
-%%    Qos = [{qos,0}],
-%%    {ok,Pid} = eredis:start_link(),
-%%    eredis:q(Pid,["SELECT",2]),
-%%    -
-%%    pass
-%%.
-%%
-%%
-%%subscribe(ClientId)->
-%%    Topic = undefined,
-%%    emqttd_pubsub:subscribe(),
-%%    Client = emqttd_cm:lookup(ClientId),
-%%    case Client of
-%%        undefined->ok;
-%%        Client->
-%%            emqttd_client:subscribe(Client#mqtt_client.client_pid,)
-%%    end,
-%%    TopicTable = [{<<"tempBoard">>,[{qos,0}]}],
-%%    on_client_subscribe(ClientId,Username, TopicTable,'_')
-%%
-%%    .
