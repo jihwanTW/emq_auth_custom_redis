@@ -49,7 +49,9 @@ on_client_connected(ConnAck, Client = #mqtt_client{client_id = ClientId,username
     case ClientId of
         <<"MQTT_TEMP">>->
             Client = emqttd_cm:lookup(ClientId),
-            emqttd_session:subscribe(Client#mqtt_client.client_pid,[{<<"tempBoard">>,[{qos,0}]}])
+            emqttd_session:subscribe(Client#mqtt_client.client_pid,[{<<"tempBoard">>,[{qos,0}]}]);
+        _->
+            undefined
     end,
     %%emqttd_client:subscribe(self(),{<<"tempBoard">>,[{qos,0}]}),
 %%    {Success_result,Pid} = eredis:start_link(),
