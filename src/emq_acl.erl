@@ -27,7 +27,7 @@ init(Opts) ->
 %% client 쪽에서 publish 못하게끔 . subscribe 는 언제나 client 쪽에서만 가능하도록 ?
 %%
 %% allow // deny
-check_acl({Client, PubSub, Topic}, _Opts) ->
+check_acl({Client, _PubSub, _Topic}, _Opts) ->
     Client_id = Client#mqtt_client.client_id,
     Username = Client#mqtt_client.username,
     Result = case Client_id of

@@ -24,7 +24,7 @@
 
 init(Opts) -> {ok, Opts}.
 
-check(#mqtt_client{client_id = ClientId, username = Username}, Password, _Opts) ->
+check(#mqtt_client{client_id = ClientId, username = _Username}, _Password, _Opts) ->
 %%    io:format("Auth Demo 2 : clientId=~p, username=~p, password=~p~n",
 %%              [ClientId, Username, Password]),
   Result = case ClientId of
