@@ -90,7 +90,7 @@ on_client_subscribe(ClientId, Username, TopicTable, _Env) ->
                       _->
                           TopicTable
     end,
-    io:format("client2(~s/~s) will subscribe: ~p chagneSub : ~p~n", [Username, ClientId, TopicTable,TopicTable1]),
+    io:format("client2(~s/~s) will subscribe: ~p chagneSub : ~p /// pid : ~p~n", [Username, ClientId, TopicTable,TopicTable1,pid_to_list(self())]),
     {ok, TopicTable1}
 .
 
@@ -112,7 +112,7 @@ on_session_created(ClientId, Username, _Env) ->
 
 %% return 으로 무엇이 넘어가든 상관없이 정상작동
 on_session_subscribed(ClientId, Username, {Topic, Opts}, _Env) ->
-    io:format("session2(~s/~s) subscribed: ~p~n", [Username, ClientId, {Topic, Opts}]),
+    io:format("session2(~s/~s) subscribed: ~p // pid : ~p~n", [Username, ClientId, {Topic, Opts},pid_to_list(self())]),
     {ok, {Topic, Opts}}
 .
 
