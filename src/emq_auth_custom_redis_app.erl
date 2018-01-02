@@ -27,6 +27,15 @@ start(_StartType, _StartArgs) ->
     ok = emqttd_access_control:register_mod(acl, emq_acl, []),
     emq_auth_custom_redis:load(application:get_all_env()),
 
+  % emqysql
+%%  emysql:add_pool(
+%%    db_sub,
+%%    [{size,1},
+%%      {user,"root"},
+%%      {password,"jhkim1020"},
+%%      {database,"with_taehyun_project_sub"},
+%%      {encoding,utf8}
+%%    ]),
     {ok, Sup}.
 
 stop(_State) ->
