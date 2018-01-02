@@ -10,7 +10,7 @@
 -author("Twinny-KJH").
 
 %% API
--export([is_user/1, init_store/0]).
+-export([is_user/1, init_store/0, get_user_idx/1]).
 
 
 -behaviour(gen_server).
@@ -44,15 +44,23 @@ init_store()->
 is_user(Session_key) ->
   gen_server:call(?MODULE,{is_user,Session_key}).
 
+get_user_idx(Session_key) ->
+  gen_server:call(?MODULE,{get_user_idx,Session_key}).
+
 
 handle_call({is_user,Session_key}, _From, State = #state{pid=Pid}) ->
   {ok,Redis_result} = eredis:q(Pid,["GET",Session_key]),
   Result = case Redis_result of
-    undefined->
-      undefined;
-    _->
-      ok
-  end,
+             undefined->
+               undefined;
+             _->
+               ok
+           end,
+  {reply, Result, State};
+
+handle_call({get_user_idx,Session_key}, _From, State = #state{pid=Pid}) ->
+  {ok,Redis_result} = eredis:q(Pid,["GET",Session_key]),
+  Result = Redis_result,
   {reply, Result, State}.
 
 handle_cast(_Msg, State) ->

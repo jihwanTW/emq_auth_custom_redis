@@ -10,7 +10,7 @@
 -author("Twinny-KJH").
 
 %% API
--export([is_user/1]).
+-export([is_user/1, get_user_idx/1]).
 
 -behaviour(gen_server).
 
@@ -36,6 +36,9 @@ init([Api]) ->
 handle_call({is_user,Session_key}, _From, State = #state{api = Api}) ->
   Reply = Api:is_user(Session_key),
   {reply, Reply, State};
+handle_call({get_user_idx,Session_key}, _From, State = #state{api = Api}) ->
+  Reply = Api:get_user_idx(Session_key),
+  {reply, Reply, State};
 handle_call(_Request, _From, State) ->
   {reply, ignored, State}.
 
@@ -59,5 +62,7 @@ code_change(_OldVsn, State, _Extra) ->
 -spec(is_user(Session_key::binary()) -> ok | undefined).
 is_user(Session_key)-> gen_server:call(?MODULE,{is_user,Session_key}).
 
-%% 유저 정보조회 ?
+%% 유저 idx 조회 ?
+-spec(is_user(Session_key::binary()) -> integer() | undefined).
+get_user_idx(Session_key)-> gen_server:call(?MODULE,{get_user_idx,Session_key}).
 

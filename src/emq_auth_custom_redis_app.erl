@@ -30,6 +30,16 @@ start(_StartType, _StartArgs) ->
     % start query server  -> check acl or auth
     % cus_redis -> using redis db
     permission_server:start_link(cus_redis),
+
+    % start emysql
+    emysql:add_pool(
+        db,
+        [{size,1},
+            {user,"root"},
+            {password,"jhkim1020"},
+            {database,"with_taehyun_project_sub"},
+            {encoding,utf8}
+        ]),
     {ok, Sup}.
 
 stop(_State) ->
