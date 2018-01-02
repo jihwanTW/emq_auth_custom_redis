@@ -142,17 +142,17 @@ get_common_sub_topic(Selected)->
 
 get_personal_sub_topics(Client_id)->
     User_idx = permission_server:get_user_idx(Client_id),
-    Sql = "SELECT group_concat(with_taehyun_project.board.title) as titles FROM subscribes WHERE user_idx = ?",
+    Sql = "SELECT group_concat(subscribe) as all_subscribes FROM subscribes WHERE user_idx = ?",
     Result = query_execute(db,sub,Sql,[User_idx]),
     case Result#result_packet.rows of
         []->
-            error;
+            [];
         _->
-            New_result = emysql_util:as_json(Result),
-            Pools = proplists:get_value(<<"titles">>,New_result,<<"">>),
+            [New_result] = emysql_util:as_json(Result),
+            Pools = proplists:get_value(<<"all_subscribes">>,New_result,<<"">>),
             case Pools of
                 <<"">> ->
-                    error;
+                    [];
                 _->
                     List = binary:split(Pools,<<",">>,[global]),
                     lists:map(fun(X)->{X,0} end,List)
