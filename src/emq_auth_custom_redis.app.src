@@ -1,0 +1,12 @@
+{application, emq_auth_custom_redis,
+ [
+  {description, ""},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {mod, {emq_auth_custom_redis_app, []}},
+  {env, []}
+ ]}.
