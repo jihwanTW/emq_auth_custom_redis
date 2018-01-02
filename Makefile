@@ -2,9 +2,11 @@ PROJECT = emq_auth_custom_redis
 PROJECT_DESCRIPTION = EMQ auth custom redis
 PROJECT_VERSION = 2.3.1
 
-BUILD_DEPS = emqttd cuttlefish
+BUILD_DEPS = emqttd cuttlefish eredis emysql
 dep_emqttd = git https://github.com/emqtt/emqttd master
 dep_cuttlefish = git https://github.com/emqtt/cuttlefish
+dep_eredis = git https://github.com/wooga/eredis
+dep_emysql = git https://github.com/Eonblast/Emysql
 
 
 ERLC_OPTS += +debug_info
