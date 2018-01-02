@@ -48,16 +48,7 @@ load(Env) ->
 
 on_client_connected(ConnAck, Client = #mqtt_client{client_id = Client_id,client_pid = Client_pid}, _Env) ->
     io:format("client2 ~s connected, connack: ~w // pid : ~p~n", [Client_id, ConnAck,pid_to_list(self())]),
-
-    case Client_id of
-        <<"server">>->
-            pass;
-        _->
-            %% 타입에따라 달라지게끔 수정.
-            Pools = get_personal_sub_topics(Client_id),
-            emqttd_client:subscribe(Client_pid, get_common_sub_topic(0)++Pools)
-    end,
-
+    emqttd_client:subscribe(Client_pid, get_sub_topics(0,Client_id)),
     {ok, Client}.
 
 on_client_disconnected(Reason, _Client = #mqtt_client{client_id = ClientId}, _Env) ->
@@ -124,46 +115,3 @@ unload() ->
     emqttd:unhook('message.acked', fun ?MODULE:on_message_acked/4).
 
 
-
-%internal Functions
-get_common_sub_topic(Selected)->
-    case Selected of
-        0->
-            [
-                {<<"board">>,0},
-                {<<"notice">>,0},
-                {<<"update">>,0}
-            ];
-        _->
-            error
-    end
-
-    .
-
-get_personal_sub_topics(Client_id)->
-    User_idx = permission_server:get_user_idx(Client_id),
-    Sql = "SELECT group_concat(subscribe) as all_subscribes FROM subscribes WHERE user_idx = ?",
-    Result = query_execute(db,sub,Sql,[User_idx]),
-    case Result#result_packet.rows of
-        []->
-            [];
-        _->
-            [New_result] = emysql_util:as_json(Result),
-            Pools = proplists:get_value(<<"all_subscribes">>,New_result,<<"">>),
-            case Pools of
-                <<"">> ->
-                    [];
-                _->
-                    List = binary:split(Pools,<<",">>,[global]),
-                    lists:map(fun(X)->{X,0} end,List)
-            end
-    end
-
-    .
-
-
-
-query_execute(Db,Pool,Sql,Param)->
-    emysql:prepare(Pool,Sql),
-    emysql:execute(Db,Pool,Param)
-.
