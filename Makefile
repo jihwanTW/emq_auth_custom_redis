@@ -6,7 +6,7 @@ BUILD_DEPS = emqttd cuttlefish eredis emysql
 dep_emqttd = git https://github.com/emqtt/emqttd master
 dep_cuttlefish = git https://github.com/emqtt/cuttlefish
 dep_eredis = git https://github.com/wooga/eredis
-dep_emysql = git https://github.com/Eonblast/Emysql
+dep_emysql = git https://github.com/Eonblast/Emysql 0.4.0
 
 
 ERLC_OPTS += +debug_info
