@@ -34,25 +34,7 @@ check_acl({Client, _PubSub, _Topic}, _Opts) ->
                  <<"server">>->
                      allow;
                  _->
-                     {Success_result,Pid} = eredis:start_link(),
-                     Result1 = case Success_result of
-                                   ok->
-                                       {ok,Redis_result} = eredis:q(Pid,["GET", Client_id]),
-                                       case Redis_result of
-                                           undefined->
-                                               deny;%{error,<<"session key is not undefined">>};
-                                           ok->
-                                               allow;
-                                           _->
-                                               io:format("redis result : [~p]~n",[Redis_result]),
-                                               allow
-                                       end
-                                   ;
-                                   _->
-                                       deny%{error,<<"eredis start link error">>}
-                               end,
-                     exit(Pid,normal),
-                     Result1
+                     permission_server:is_user(Client_id)
              end,
     io:format("ACL [~p] [~p] [Result:~p]~n", [Client_id, Username,Result]),
     Result.

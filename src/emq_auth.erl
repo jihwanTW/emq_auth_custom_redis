@@ -24,33 +24,16 @@
 
 init(Opts) -> {ok, Opts}.
 
-check(#mqtt_client{client_id = ClientId, username = _Username}, _Password, _Opts) ->
+check(#mqtt_client{client_id = Client_id, username = _Username}, _Password, _Opts) ->
 %%    io:format("Auth Demo 2 : clientId=~p, username=~p, password=~p~n",
 %%              [ClientId, Username, Password]),
-  Result = case ClientId of
+  Result = case Client_id of
     <<"server">>->
       ok;
     _->
-      {Success_result,Pid} = eredis:start_link(),
-      Result1 = case Success_result of
-                 ok->
-                   {ok,Redis_result} = eredis:q(Pid,["GET",ClientId]),
-                   case Redis_result of
-                     undefined->
-                       {error,<<"session key is not undefined">>};
-                     ok->
-                       ok;
-                     _->
-                       io:format("redis result : [~p]~n",[Redis_result]),
-                       ok
-                   end;
-                 _->
-                   {error,<<"eredis start link error">>}
-               end,
-      exit(Pid,normal),
-      Result1
+      permission_server:is_user(Client_id)
   end,
-  io:format("Auth clientId[~p] result[~p] ~n",[ClientId,Result]),
+  io:format("Auth clientId[~p] result[~p] ~n",[Client_id,Result]),
   Result.
 
 description() -> "Auth Demo Module".

@@ -27,6 +27,9 @@ start(_StartType, _StartArgs) ->
     ok = emqttd_access_control:register_mod(acl, emq_acl, []),
     emq_auth_custom_redis:load(application:get_all_env()),
 
+    % start query server  -> check acl or auth
+    % cus_redis -> using redis db
+    permission_server:start_link(cus_redis),
     {ok, Sup}.
 
 stop(_State) ->
