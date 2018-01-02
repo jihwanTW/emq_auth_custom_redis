@@ -63,6 +63,6 @@ code_change(_OldVsn, State, _Extra) ->
 is_user(Session_key)-> gen_server:call(?MODULE,{is_user,Session_key}).
 
 %% 유저 idx 조회 ?
--spec(is_user(Session_key::binary()) -> integer() | undefined).
+-spec(get_user_idx(Session_key::binary()) -> integer() | undefined).
 get_user_idx(Session_key)-> gen_server:call(?MODULE,{get_user_idx,Session_key}).
 
