@@ -32,6 +32,7 @@ start(_StartType, _StartArgs) ->
     permission_server:start_link(cus_redis),
 
     % start emysql
+    application:start(emysql),
     emysql:add_pool(
         db,
         [{size,1},
