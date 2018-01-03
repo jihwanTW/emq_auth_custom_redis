@@ -41,7 +41,6 @@ start(_StartType, _StartArgs) ->
             {database,"with_taehyun_project_sub"},
             {encoding,utf8}
         ]),
-    reloader:start(),
     {ok, Sup}.
 
 stop(_State) ->

@@ -13,4 +13,3 @@ data/
 emq_plugin_template.d
 .idea
 *.iml
-emq_auth_custom_redis.app.src

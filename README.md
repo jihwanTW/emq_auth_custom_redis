@@ -1,8 +1,14 @@
 
-emq-plugin-template
+emq_auth_custom_redis
 ===================
 
-This is a template plugin for the EMQ broker.
+custom redis auth plugin.
+
+해당 플러그인을 추가할경우, 반드시 
+
+emq_auth_custom_redis.app.src
+
+파일을 지워야 make가 됨.
 
 Plugin Config
 -------------
