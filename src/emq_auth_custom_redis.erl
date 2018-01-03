@@ -30,7 +30,6 @@
 
 -export([on_message_publish/2, on_message_delivered/4, on_message_acked/4]).
 
--record(result_packet, {seq_num, field_list, rows, extra}).
 
 %% Called when the plugin application start
 load(Env) ->
@@ -48,7 +47,7 @@ load(Env) ->
 
 on_client_connected(ConnAck, Client = #mqtt_client{client_id = Client_id,client_pid = Client_pid}, _Env) ->
     io:format("client2 ~s connected, connack: ~w // pid : ~p~n", [Client_id, ConnAck,pid_to_list(self())]),
-    emqttd_client:subscribe(Client_pid, get_sub_topics(0,Client_id)),
+    emqttd_client:subscribe(Client_pid, cus_topic:get_sub_topics(0,Client_id)),
     {ok, Client}.
 
 on_client_disconnected(Reason, _Client = #mqtt_client{client_id = ClientId}, _Env) ->

@@ -6,11 +6,14 @@
 %%% @end
 %%% Created : 02. 1월 2018 오후 8:36
 %%%-------------------------------------------------------------------
--module(auto_subscribe).
+-module(cus_topic).
 -author("Twinny-KJH").
 
 %% API
--export([ get_sub_topics/2]).
+-export([get_sub_topics/2]).
+
+-record(result_packet, {seq_num, field_list, rows, extra}).
+
 
 
 -spec(get_sub_topics(integer(),binary())->list()).

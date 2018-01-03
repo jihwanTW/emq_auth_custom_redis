@@ -37,7 +37,13 @@ check_acl({Client, _PubSub, _Topic}, _Opts) ->
                      permission_server:is_user(Client_id)
              end,
     io:format("ACL [~p] [~p] [Result:~p]~n", [Client_id, Username,Result]),
-    Result.
+    New_result = case Result of
+                     ok->
+                         allow;
+                     _->
+                         Result
+                 end,
+    New_result.
 
 reload_acl(_Opts) ->
     ok.
